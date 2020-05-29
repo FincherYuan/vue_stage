@@ -114,13 +114,29 @@ __webpack_require__(/*! mavon-editor/dist/css/index.css */ "./node_modules/_mavo
 exports.default = {
 	name: 'CompoOne',
 	components: { mavonEditor: _mavonEditor.mavonEditor },
+	props: {
+		compodata: {
+			type: Object,
+			default: {
+				value: "标题一",
+				configItems: {
+					toolbarsFlag: false,
+					defaultOpen: "edit",
+					subfield: true
+				}
+			}
+		}
+	},
+
 	data: function data() {
 		return {
 			value: '',
 			editable: false,
 			navigation: true,
-			preview: "preview",
-			placeholder: "请留下你的印记"
+			preview: "edit",
+			placeholder: "请留下你的印记",
+			subfield: false, // 设置单双栏
+			toolbarsFlag: false // 设置工具栏不显示
 			//toolbars :{
 			//navigation: true, // 导航目录
 			/* 2.1.8 */
@@ -132,6 +148,21 @@ exports.default = {
    preview: true, // 预览*/
 			//}
 		};
+	},
+
+	methods: {
+		save: function save(value, render) {
+			var data = new Object();
+			data.value = value;
+			data.render = render;
+			this.$emit("childInvoke", "save", data);
+		},
+		change: function change(value, render) {
+			var data = new Object();
+			data.value = value;
+			data.render = render;
+			this.$emit("childInvoke", "change", data);
+		}
 	}
 };
 
@@ -18446,20 +18477,24 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { attrs: { id: "main" } },
+    { staticStyle: { height: "600px" }, attrs: { id: "main" } },
     [
       _c("mavon-editor", {
+        staticStyle: { height: "600px" },
         attrs: {
-          defaultOpen: _vm.preview,
+          defaultOpen: _vm.compodata.configItems.defaultOpen,
           placeholder: _vm.placeholder,
-          navigation: _vm.navigation
+          navigation: _vm.navigation,
+          subfield: _vm.compodata.configItems.subfield,
+          toolbarsFlag: _vm.compodata.configItems.toolbarsFlag
         },
+        on: { save: _vm.save, change: _vm.change },
         model: {
-          value: _vm.value,
+          value: _vm.compodata.value,
           callback: function($$v) {
-            _vm.value = $$v
+            _vm.$set(_vm.compodata, "value", $$v)
           },
-          expression: "value"
+          expression: "compodata.value"
         }
       })
     ],
@@ -30771,8 +30806,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     },
     init: function init(props) {
       console.log('-----init', this.model.style, props);
-      //debugger;
-      console.log('-----init', "重启");
       setHtml(this.model, props);
     },
     update: function update(props) {
@@ -30785,6 +30818,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   };
 
   var setHtml = function setHtml(model, props) {
+    var compodata = props.data ? props.data : {};
+    // const configItems = props.data ? props.data : {}
     KDApi.loadFile('./css/index.css', model, function () {
       var _invoke = model.invoke,
           dom = model.dom;
@@ -30793,13 +30828,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
       var activeI = data ? data.avtiveIndex : -1;
       new _vue2.default({
         el: dom,
-        template: '<CompoOne  />',
+        template: '<CompoOne  @childInvoke="invoke" :compodata = "compodata" :configItems ="configItems"/>',
         components: {
           CompoOne: _CompoOne2.default
         },
         data: {
           activeIndex: activeI,
-          model: model
+          model: model,
+          compodata: compodata || {
+            value: "父标题一",
+            configItems: {
+              toolbarsFlag: false,
+              defaultOpen: "edit",
+              subfield: true
+            }
+          }
         },
         mounted: function mounted() {
           var self = this;

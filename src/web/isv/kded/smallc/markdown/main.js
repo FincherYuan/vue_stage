@@ -21,8 +21,6 @@ import eventBus from '../../../../../../util/eventBus'
     },
     init: function (props) {
       console.log('-----init', this.model.style, props)
-      //debugger;
-      console.log('-----init', "重启")
       setHtml(this.model, props)
     },
     update: function (props) {
@@ -35,19 +33,29 @@ import eventBus from '../../../../../../util/eventBus'
   }
 
   const setHtml = (model, props) => {
+    const compodata = props.data ? props.data : {}
+   // const configItems = props.data ? props.data : {}
     KDApi.loadFile('./css/index.css', model, () => {
       const { invoke, dom } = model
       const { data } = props
       const activeI = data ? data.avtiveIndex : -1
       new Vue({
         el: dom,
-        template: '<CompoOne  />',
+        template: '<CompoOne  @childInvoke="invoke" :compodata = "compodata" :configItems ="configItems"/>',
         components: {
           CompoOne
         },
         data: {
           activeIndex: activeI,
-          model: model
+          model: model,
+          compodata : compodata || {
+            value : "父标题一",
+            configItems :{
+              toolbarsFlag : false,
+              defaultOpen : "edit",
+              subfield : true
+            }
+          }
         },
         mounted () {
           const self = this

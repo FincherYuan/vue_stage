@@ -28,6 +28,11 @@
 命令终端进入vue-stage，运行nodemon server.js
 此功能优化开发过程中出现频繁打zip包的过程
 
+## 本地调试
+
+开发调试前确保dev模式和nodemon两个都启动
+在苍穹对应的页面开发界面url上添加kdcus_cdn=http://localhost:3001参数，刷新
+
 ## KDE脚本插件测试
 
 ```javascript

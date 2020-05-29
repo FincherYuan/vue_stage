@@ -1,6 +1,6 @@
 <template>
-	<div id="main">
-	    <mavon-editor v-model="value"  :defaultOpen="preview" :placeholder ="placeholder" :navigation ="navigation"/>
+	<div id="main" style="height: 600px"> <!-- v-html="compodata.render" -->
+	    <mavon-editor v-model="compodata.value"  :defaultOpen="compodata.configItems.defaultOpen" :placeholder ="placeholder" :navigation ="navigation" @save="save" @change="change" :subfield ="compodata.configItems.subfield" :toolbarsFlag="compodata.configItems.toolbarsFlag"  style="height: 600px"/>
 	</div>
 
 </template>
@@ -10,13 +10,29 @@
 	export default {
 		name : 'CompoOne',
 		components: { mavonEditor },
+		props : {
+			compodata :{
+				type : Object,
+				default :{
+					value : "标题一",
+		            configItems : {
+		              	toolbarsFlag : false,
+		              	defaultOpen : "edit",
+		              	subfield : true
+		            }
+				}
+			}
+		}
+		,
 		data (){
 			return {
 				value : '',
 				editable: false,
 				navigation : true,
-				preview: "preview",
-				placeholder :"请留下你的印记"
+				preview: "edit",
+				placeholder :"请留下你的印记",
+				subfield : false, // 设置单双栏
+				toolbarsFlag : false // 设置工具栏不显示
 				//toolbars :{
 					//navigation: true, // 导航目录
 			        /* 2.1.8 */
@@ -27,6 +43,20 @@
 			        /*subfield: true, // 单双栏模式
 			        preview: true, // 预览*/
 				//}
+			}
+		},
+		methods: {
+			save(value,render){
+				var data = new Object();
+				data.value = value;
+				data.render = render;
+				this.$emit("childInvoke","save",data);
+			},
+			change(value,render){
+				var data = new Object();
+				data.value = value;
+				data.render = render;
+				this.$emit("childInvoke","change",data);
 			}
 		}
 	}
