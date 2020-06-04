@@ -41,15 +41,17 @@ import eventBus from '../../../../../../util/eventBus'
       const activeI = data ? data.avtiveIndex : -1
       new Vue({
         el: dom,
-        template: '<CompoOne  @childInvoke="invoke" :compodata = "compodata" :configItems ="configItems"/>',
+        template: '<CompoOne ref ="compoOne" @childInvoke="invokeAsync" :compodata = "compodata"/>',
         components: {
           CompoOne
         },
         data: {
           activeIndex: activeI,
+          
           model: model,
           compodata : compodata || {
             value : "父标题一",
+            imgPos : 0,
             configItems :{
               toolbarsFlag : false,
               defaultOpen : "edit",
@@ -62,17 +64,36 @@ import eventBus from '../../../../../../util/eventBus'
           this.updateSub = eventBus.sub(model, 'update', (props) => {
             const { data } = props
             self.activeIndex = data ? data.activeIndex : -1
+            self.compodata.imgPos = data ? data.pos : -1
+            if ("upload" == data.eventName) {
+              self.gotoSetImgToPos(data.pos,data.tempImgUrl);
+            }else if ("change" == data.eventName) {
+
+            }
+            
           })
         },
         destroyed () {
           eventBus.unsub(this.updateSub)
         },
         methods: {
-          invoke: (eventName, args) => {
-            invoke(eventName, args)
+           invoke: (eventName, args, callback) => { // callback 添加回调函数
+              invoke(eventName, args)
+              typeof callback === 'function' && callback(compodata)
+            
+          },
+          async  invokeAsync (eventName, args ,callback){ // callback 添加回调函数
+              await  invoke(eventName, args)
+              console.log("invoke 执行完了，我要开始回调了");
+              typeof callback === 'function' && callback(compodata)
+              console.log("invoke 执行完了，回调也完成了");
+            
           },
           getLangMsg: (key) => {
             return KDApi.getLangMsg(model, key)
+          },
+          gotoSetImgToPos(pos,url){
+            this.$refs.compoOne.setImgUrl(pos,url)
           }
         }
       })

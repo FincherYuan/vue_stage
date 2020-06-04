@@ -1,6 +1,6 @@
 <template>
 	<div id="main" style="height: 600px"> <!-- v-html="compodata.render" -->
-	    <mavon-editor v-model="compodata.value"  :defaultOpen="compodata.configItems.defaultOpen" :placeholder ="placeholder" :navigation ="navigation" @save="save" @change="change" :subfield ="compodata.configItems.subfield" :toolbarsFlag="compodata.configItems.toolbarsFlag"  style="height: 600px"/>
+	    <mavon-editor ref=md v-model="compodata.value" :defaultOpen="compodata.configItems.defaultOpen" :placeholder ="placeholder" :navigation ="navigation" @save="save" @change="change" @imgAdd="$imgAdd" :subfield ="compodata.configItems.subfield" :toolbarsFlag="compodata.configItems.toolbarsFlag"  style="height: 600px"/>
 	</div>
 
 </template>
@@ -45,6 +45,10 @@
 				//}
 			}
 		},
+		mounted () {
+			console.log("CompoOne update --" + this.compodata)
+
+		},
 		methods: {
 			save(value,render){
 				var data = new Object();
@@ -56,7 +60,32 @@
 				var data = new Object();
 				data.value = value;
 				data.render = render;
-				this.$emit("childInvoke","change",data);
+				
+				this.$emit("childInvoke","change",data,val => {
+					//$vm.$img2Url(pos, url);
+
+					//console.log(this.compodata.tempImgUrl);// 回调函数
+				});
+			},
+			$imgAdd(pos, $file){
+				const _self = this;
+				_self.parentInvokeMethod(pos, $file);
+
+			},
+
+			setImgUrl(pos,url){
+				this.$refs.md.$img2Url(pos, url);
+			},
+
+			async parentInvokeMethod(pos, $file) {
+				const _self = this;
+				var data = new Object();
+				data.file = $file;
+				data.imgPos = pos;
+				await this.$emit("childInvoke","upload",data,val => {
+					//_self.$refs.md.$img2Url(pos, val.tempImgUrl);
+				});
+
 			}
 		}
 	}
