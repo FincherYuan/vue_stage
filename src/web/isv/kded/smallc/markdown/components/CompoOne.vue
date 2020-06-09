@@ -1,6 +1,6 @@
 <template>
-	<div id="main" style="height: 600px"> <!-- v-html="compodata.render" -->
-	    <mavon-editor ref=md v-model="compodata.value" :defaultOpen="compodata.configItems.defaultOpen" :placeholder ="placeholder" :navigation ="navigation" @save="save" @change="change" @imgAdd="$imgAdd" :subfield ="compodata.configItems.subfield" :toolbarsFlag="compodata.configItems.toolbarsFlag"  style="height: 600px" :toolbars ="toolbars"/>
+	<div id="main" style="height: 100%"> <!-- v-html="compodata.render" -->
+	    <mavon-editor ref=md v-model="compodata.value" :defaultOpen="compodata.configItems.defaultOpen" :placeholder ="placeholder" :navigation ="navigation" @save="save" @change="change" @imgAdd="$imgAdd" :subfield ="compodata.configItems.subfield" :toolbarsFlag="compodata.configItems.toolbarsFlag"  style="height: 1100px" :toolbars ="toolbars"/>
 	</div>
 
 </template>
