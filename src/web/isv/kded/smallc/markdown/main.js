@@ -69,6 +69,10 @@ import eventBus from '../../../../../../util/eventBus'
               self.gotoSetImgToPos(data.pos,data.tempImgUrl);
             }else if ("change" == data.eventName) {
 
+            }else if ("preview" == data.eventName) {
+              self.compodata.configItems = data.configItems;
+            }else if ("unpreview" == data.eventName){
+              self.compodata.configItems = data.configItems;
             }
             
           })
