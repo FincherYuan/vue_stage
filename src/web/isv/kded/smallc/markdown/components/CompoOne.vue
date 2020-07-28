@@ -1,6 +1,6 @@
 <template>
 	<div id="main" style="height: 100%"> <!-- v-html="compodata.render" @change="change"-->
-	    <mavon-editor ref=md v-model="compodata.value" :defaultOpen="compodata.configItems.defaultOpen" :placeholder ="placeholder" :navigation ="navigation" @save="save"  @imgAdd="$imgAdd" :subfield ="compodata.configItems.subfield" :toolbarsFlag="compodata.configItems.toolbarsFlag"  style="height: 1100px" :toolbars ="compodata.configItems.toolbars"/>
+	    <mavon-editor ref=md v-model="compodata.value" @change="change" :defaultOpen="compodata.configItems.defaultOpen"  :placeholder ="placeholder" :navigation ="navigation" @save="save"  @imgAdd="$imgAdd" :subfield ="compodata.configItems.subfield" :toolbarsFlag="compodata.configItems.toolbarsFlag"  style="height: 1100px" :toolbars ="compodata.configItems.toolbars"/>
 	</div>
 
 </template>
@@ -124,7 +124,7 @@
 				this.$emit("childInvoke","change",data,val => {
 					//$vm.$img2Url(pos, url);
 
-					console.log(this.compodata.tempImgUrl);// 回调函数
+					//console.log(this.compodata.tempImgUrl);// 回调函数
 				});
 			},
 			$imgAdd(pos, $file){
