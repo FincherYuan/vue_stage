@@ -1,6 +1,6 @@
 <template>
-	<div id="main" style="height: 100%"> <!-- v-html="compodata.render" -->
-	    <mavon-editor ref=md v-model="compodata.value" :defaultOpen="compodata.configItems.defaultOpen" :placeholder ="placeholder" :navigation ="navigation" @save="save" @change="change" @imgAdd="$imgAdd" :subfield ="compodata.configItems.subfield" :toolbarsFlag="compodata.configItems.toolbarsFlag"  style="height: 1100px" :toolbars ="compodata.configItems.toolbars"/>
+	<div id="main" style="height: 100%"> <!-- v-html="compodata.render" @change="change"-->
+	    <mavon-editor ref=md v-model="compodata.value" :defaultOpen="compodata.configItems.defaultOpen" :placeholder ="placeholder" :navigation ="navigation" @save="save"  @imgAdd="$imgAdd" :subfield ="compodata.configItems.subfield" :toolbarsFlag="compodata.configItems.toolbarsFlag"  style="height: 1100px" :toolbars ="compodata.configItems.toolbars"/>
 	</div>
 
 </template>
@@ -124,7 +124,7 @@
 				this.$emit("childInvoke","change",data,val => {
 					//$vm.$img2Url(pos, url);
 
-					//console.log(this.compodata.tempImgUrl);// 回调函数
+					console.log(this.compodata.tempImgUrl);// 回调函数
 				});
 			},
 			$imgAdd(pos, $file){
@@ -133,18 +133,26 @@
 
 			},
 
-			setImgUrl(pos,url){
-				this.$refs.md.$img2Url(pos, url);
+			setImgUrl(datas){
+				for (var i = 0; i < datas.length; i++) {
+					var row = datas[i];
+					var pos = row.pos;
+					var url = row.tempImgUrl;
+					this.$refs.md.$img2Url(pos, url);
+				}
+				
 			},
 
-			async parentInvokeMethod(pos, $file) {
+			parentInvokeMethod(pos, $file) {
 				const _self = this;
 				var data = new Object();
 				data.file = $file;
 				data.imgPos = pos;
-				await this.$emit("childInvoke","upload",data,val => {
+				 this.$emit("childInvoke","upload",data,val => {
 					//_self.$refs.md.$img2Url(pos, val.tempImgUrl);
+					console.log("上传成功");
 				});
+				 
 
 			}
 		}
